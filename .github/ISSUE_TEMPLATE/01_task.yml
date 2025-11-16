@@ -1,0 +1,94 @@
+name: 📝 Task
+description: 小タスク・機能作業・デザイン作業などの一般タスク
+title: "[TASK] <短い要約>"
+labels: ["task"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        必須項目を埋めてください。期限が決まっていれば End date も入力。
+
+  - type: input
+    id: summary
+    attributes:
+      label: 概要（1行）
+      placeholder: 何をするタスクか
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: 詳細・受け入れ条件（必須なら）
+      placeholder: 完了条件 / 手順 / 参考リンク（Google Drive など）
+      render: markdown
+
+  - type: dropdown
+    id: role
+    attributes:
+      label: Role
+      options: [Programmer, Designer, Planner, QA]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: team
+    attributes:
+      label: ProgramTeam
+      options: [A, B, C]
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options: [High, Medium, Low]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options: [Core, UI, Audio, Tool, Level, VFX, Other]
+    validations:
+      required: false
+
+  - type: dropdown
+    id: size
+    attributes:
+      label: Size
+      options: [XS, S, M, L, XL]
+    validations:
+      required: false
+
+  - type: input
+    id: estimate
+    attributes:
+      label: Estimate (時間)
+      placeholder: "例: 4"
+    validations:
+      required: false
+
+  - type: input
+    id: start
+    attributes:
+      label: Start date (YYYY-MM-DD)
+      placeholder: "2025-01-15"
+
+  - type: input
+    id: due
+    attributes:
+      label: End date (YYYY-MM-DD)
+      placeholder: "2025-01-20"
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: チェック（該当するもの）
+      options:
+        - label: 仕様確定済み
+        - label: 要レビュー
+        - label: 外部アセットあり（Drive/URL記載）
