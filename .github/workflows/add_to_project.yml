@@ -31,14 +31,14 @@ jobs:
             console.log(lines.join('\n'));
             console.log('=== /Issue Body ===');
 
-            // ƒ‰ƒxƒ‹‚Ì•Ê–¼i¬•¶š‚Å”äŠrj
+            // ãƒ©ãƒ™ãƒ«ã®åˆ¥åï¼ˆå°æ–‡å­—ã§æ¯”è¼ƒï¼‰
             const aliases = {
               role: ['role'],
               team: ['programteam','team'],
               priority: ['priority'],
-              component: ['component','component (”CˆÓ)'],
+              component: ['component','component (ä»»æ„)'],
               size: ['size'],
-              estimate: ['estimate','estimate (ŠÔ)'],
+              estimate: ['estimate','estimate (æ™‚é–“)'],
               start_date: ['start date','start date (yyyy-mm-dd)'],
               due_date: ['end date','due date','end date (yyyy-mm-dd)']
             };
@@ -50,8 +50,8 @@ jobs:
                 const l = norm(lines[i]);
                 for (const k of keys){
                   if (l.startsWith(k)){
-                    // “¯ˆês‚É ":" ‚ª‚ ‚ê‚Î‚»‚ÌŒã‚ğ’l‚Æ‚·‚éB‚È‚¯‚ê‚ÎŸ‚Ì”ñ‹ós‚ğg‚¤
-                    const after = lines[i].split(/[:F]/).slice(1).join(':').trim();
+                    // åŒä¸€è¡Œã« ":" ãŒã‚ã‚Œã°ãã®å¾Œã‚’å€¤ã¨ã™ã‚‹ã€‚ãªã‘ã‚Œã°æ¬¡ã®éç©ºè¡Œã‚’ä½¿ã†
+                    const after = lines[i].split(/[:ï¼š]/).slice(1).join(':').trim();
                     if (after) return after;
                     let j=i+1; while(j<lines.length && lines[j].trim().length===0) j++;
                     if (j<lines.length) return lines[j].trim();
@@ -122,12 +122,12 @@ jobs:
               }
             `;
 
-            // 1) ƒvƒƒWƒFƒNƒgID‚ÆƒtƒB[ƒ‹ƒh‚¾‚¯æ“¾
+            // 1) ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆIDã¨ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã ã‘å–å¾—
             const res = await github.graphql(projQuery, { org, number: projectNumber });
             const project = res.organization.projectV2;
             const projectId = project.id;
 
-            // 2) ƒAƒCƒeƒ€ID‚ğŒˆ’è
+            // 2) ã‚¢ã‚¤ãƒ†ãƒ IDã‚’æ±ºå®š
             let itemId = itemIdHint;
             if (!itemId) {
               try {
@@ -175,13 +175,13 @@ jobs:
           github-token: ${{ secrets.ORG_PROJECTS_TOKEN }}
           script: |
             if (!process.env.ITEM_ID || !process.env.PROJECT_ID) {
-              console.log('[Diag] item_id/project_id –¢æ“¾B‘O’i‚Ì Get Project Data ‚ğŠm”F');
+              console.log('[Diag] item_id/project_id æœªå–å¾—ã€‚å‰æ®µã® Get Project Data ã‚’ç¢ºèª');
               console.log('[Diag] ITEM_ID=', process.env.ITEM_ID);
               console.log('[Diag] PROJECT_ID=', process.env.PROJECT_ID);
               return;
             }
             if (!process.env.FIELDS || !process.env.FIELD_OPTIONS) {
-              console.log('[Diag] FIELDS or FIELD_OPTIONS –¢æ“¾');
+              console.log('[Diag] FIELDS or FIELD_OPTIONS æœªå–å¾—');
               console.log('[Diag] FIELDS=', process.env.FIELDS);
               console.log('[Diag] FIELD_OPTIONS=', process.env.FIELD_OPTIONS);
               return;
@@ -202,17 +202,26 @@ jobs:
             function getFieldId(fieldName){ const id = fieldIdByName.get(fieldName.trim().toLowerCase()); if(!id) console.log(`Field not found: ${fieldName}`); return id; }
             function getOptionId(fieldName, value){ const opts = optionIdByFieldName.get(fieldName.trim().toLowerCase()); if(!opts) { console.log(`Options not found for ${fieldName}`); return null; } const id = opts.get(value.trim().toLowerCase()); if(!id) console.log(`Option not found: ${fieldName} -> ${value}. Available=`, Array.from(opts.keys())); return id; }
 
-            // “ü—Í’l¨ƒvƒƒWƒFƒNƒg‘¤•\¦–¼‚Ö‚Ìƒ}ƒbƒsƒ“ƒO
+            // å…¥åŠ›å€¤â†’ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆå´è¡¨ç¤ºåã¸ã®ãƒãƒƒãƒ”ãƒ³ã‚°
             function mapValue(fieldName, value){
               const v = (value||'').trim();
               const lc = v.toLowerCase();
               const maps = {
                 'role': {
-                  'planner':'ƒvƒ‰ƒ“ƒi[','programmer':'ƒvƒƒOƒ‰ƒ}[','designer':'ƒfƒUƒCƒi[','qa':'Q•A','q&a':'Q•A','q•a':'Q•A'
+                  'planner':'ãƒ—ãƒ©ãƒ³ãƒŠãƒ¼','programmer':'ãƒ—ãƒ­ã‚°ãƒ©ãƒãƒ¼','designer':'ãƒ‡ã‚¶ã‚¤ãƒŠãƒ¼','qa':'Qï¼†A','q&a':'Qï¼†A','qï¼†a':'Qï¼†A'
                 },
                 'priority': {
-                  'high':'P0','p0':'P0','medium':'P1','mid':'P1','p1':'P1','low':'P2','p2':'P2'
-                },
+                '0': 'P10'
+                '1': 'P9'
+                '2': 'P8'
+                '3': 'P7'
+                '4': 'P6'
+                '5': 'P5'
+                '6': 'P4'
+                '7': 'P3'
+                '8': 'P2'
+                '9': 'P1'
+                '10': 'P0' },
                 'component': {
                   'level':'Stage','stages':'Stage','stage':'Stage'
                 },
@@ -225,7 +234,7 @@ jobs:
               };
               const key = fieldName.trim().toLowerCase();
               if (maps[key] && maps[key][lc]) return maps[key][lc];
-              return v; // ƒ}ƒbƒsƒ“ƒO•s—v‚È‚ç‚»‚Ì‚Ü‚Ü
+              return v; // ãƒãƒƒãƒ”ãƒ³ã‚°ä¸è¦ãªã‚‰ãã®ã¾ã¾
             }
 
             let intended = 0, changed = 0;
