@@ -8,6 +8,9 @@ jobs:
   add-to-project:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo (for shared scripts)
+        uses: actions/checkout@v4
+
       - name: Add to Project (best-effort)
         uses: actions/add-to-project@v0.5.0
         id: add-project
@@ -174,5 +177,13 @@ jobs:
         with:
           github-token: ${{ secrets.ORG_PROJECTS_TOKEN }}
           script: |
-            const run = require('./.github/workflows/scripts/set-project-fields.js');
+            const path = require('path');
+            const fs = require('fs');
+            const scriptPath = path.join(process.env.GITHUB_WORKSPACE, '.github/workflows/scripts/set-project-fields.js');
+            console.log('Using script:', scriptPath);
+            if (!fs.existsSync(scriptPath)) {
+              core.setFailed(`[Missing] set-project-fields.js が見つかりません。path=${scriptPath}`);
+              return;
+            }
+            const run = require(scriptPath);
             await run({ core, github, process });
