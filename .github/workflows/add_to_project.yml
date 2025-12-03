@@ -189,8 +189,18 @@ jobs:
 
             const projectId = process.env.PROJECT_ID;
             const itemId = process.env.ITEM_ID;
-            const fields = JSON.parse(process.env.FIELDS);
-            const fieldOptions = JSON.parse(process.env.FIELD_OPTIONS);
+
+            function safeParse(name, raw) {
+              try { return JSON.parse(raw); }
+              catch (e) {
+                core.setFailed(`[ParseError] ${name} を JSON として解釈できません: ${e.message}. raw=${raw}`);
+                return null;
+              }
+            }
+
+            const fields = safeParse('FIELDS', process.env.FIELDS);
+            const fieldOptions = safeParse('FIELD_OPTIONS', process.env.FIELD_OPTIONS);
+            if (!fields || !fieldOptions) return;
             console.log('FIELDS JSON:', JSON.stringify(fields, null, 2));
             console.log('FIELD_OPTIONS JSON:', JSON.stringify(fieldOptions, null, 2));
 
