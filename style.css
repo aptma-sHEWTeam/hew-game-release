@@ -1,0 +1,818 @@
+/* ============================
+   フリップエスケイプ 紹介ページ
+   スマホ専用・宇宙テーマ
+   ============================ */
+
+/* --- リセット & 基本 --- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+    font-family: 'Noto Sans JP', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* --- Canvas背景 --- */
+#space-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+#fx-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* --- 画面共通 --- */
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+}
+
+.screen.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.screen.warp-out {
+    animation: warpOut 0.8s ease-in forwards;
+}
+
+.screen.warp-in {
+    animation: warpIn 0.8s ease-out forwards;
+    pointer-events: auto;
+}
+
+@keyframes warpOut {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+
+    100% {
+        transform: scale(3);
+        opacity: 0;
+        filter: blur(20px);
+    }
+}
+
+@keyframes warpIn {
+    0% {
+        transform: scale(0.1);
+        opacity: 0;
+        filter: blur(20px);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+/* --- 画面1: ランディング --- */
+.landing-content {
+    text-align: center;
+    z-index: 10;
+}
+
+.title-glitch {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow:
+        0 0 10px #0ff,
+        0 0 20px #0ff,
+        0 0 40px #0ff,
+        0 0 80px #0af;
+    position: relative;
+    letter-spacing: 0.05em;
+    animation: glitchFlicker 3s infinite;
+}
+
+.title-glitch::before,
+.title-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.title-glitch::before {
+    color: #f0f;
+    animation: glitch1 2s infinite;
+    clip-path: inset(0 0 60% 0);
+}
+
+.title-glitch::after {
+    color: #0ff;
+    animation: glitch2 2s infinite;
+    clip-path: inset(60% 0 0 0);
+}
+
+@keyframes glitch1 {
+
+    0%,
+    90%,
+    100% {
+        transform: translate(0);
+    }
+
+    92% {
+        transform: translate(-5px, 2px);
+    }
+
+    94% {
+        transform: translate(5px, -2px);
+    }
+
+    96% {
+        transform: translate(-3px, 1px);
+    }
+}
+
+@keyframes glitch2 {
+
+    0%,
+    90%,
+    100% {
+        transform: translate(0);
+    }
+
+    91% {
+        transform: translate(5px, -2px);
+    }
+
+    93% {
+        transform: translate(-5px, 2px);
+    }
+
+    95% {
+        transform: translate(3px, -1px);
+    }
+}
+
+@keyframes glitchFlicker {
+
+    0%,
+    94%,
+    100% {
+        opacity: 1;
+    }
+
+    95% {
+        opacity: 0.8;
+    }
+
+    96% {
+        opacity: 1;
+    }
+
+    97% {
+        opacity: 0.6;
+    }
+}
+
+.title-jp {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #c8b0ff;
+    margin-top: 8px;
+    letter-spacing: 0.3em;
+    text-shadow: 0 0 15px #c8b0ff88;
+}
+
+.tagline {
+    font-size: 0.9rem;
+    color: #8af;
+    margin-top: 20px;
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 10px #88aaff88;
+    animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.tap-prompt {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    color: #0ff;
+    letter-spacing: 0.2em;
+    animation: tapPulse 2s ease-in-out infinite;
+}
+
+.tap-icon {
+    font-size: 2rem;
+    animation: tapBounce 1.5s ease-in-out infinite;
+}
+
+@keyframes tapPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes tapBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* --- 画面2: 選択画面 --- */
+.select-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 20px #0ff, 0 0 40px #0af;
+    letter-spacing: 0.3em;
+    margin-bottom: 50px;
+}
+
+.planets-container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    align-items: center;
+}
+
+.planet {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    animation: planetFloat 4s ease-in-out infinite;
+}
+
+.planet:nth-child(2) {
+    animation-delay: -2s;
+}
+
+.planet:active {
+    transform: scale(0.9);
+}
+
+@keyframes planetFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+.planet-body {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    position: relative;
+    box-shadow:
+        inset -20px -10px 30px rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(100, 200, 255, 0.3),
+        0 0 60px rgba(100, 200, 255, 0.15);
+}
+
+.planet-earth {
+    background: radial-gradient(circle at 35% 35%, #4fc3f7, #1565c0, #0d47a1);
+    overflow: hidden;
+}
+
+.planet-earth::before {
+    content: '';
+    position: absolute;
+    width: 40%;
+    height: 25%;
+    background: rgba(76, 175, 80, 0.6);
+    border-radius: 50%;
+    top: 25%;
+    left: 20%;
+    filter: blur(3px);
+}
+
+.planet-earth::after {
+    content: '';
+    position: absolute;
+    width: 30%;
+    height: 40%;
+    background: rgba(76, 175, 80, 0.5);
+    border-radius: 50%;
+    top: 45%;
+    left: 50%;
+    filter: blur(3px);
+}
+
+.planet-mars {
+    background: radial-gradient(circle at 35% 35%, #ff8a65, #e64a19, #bf360c);
+}
+
+.planet-mars::before {
+    content: '';
+    position: absolute;
+    width: 35%;
+    height: 15%;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+    top: 40%;
+    left: 30%;
+    filter: blur(2px);
+}
+
+.planet-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 160%;
+    height: 30%;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotateX(75deg);
+}
+
+.planet-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 18px;
+    text-shadow: 0 0 15px #0ff;
+    letter-spacing: 0.2em;
+}
+
+.planet-sublabel {
+    font-size: 0.75rem;
+    color: #8af;
+    margin-top: 4px;
+    letter-spacing: 0.1em;
+}
+
+.select-hint {
+    position: absolute;
+    bottom: 60px;
+    font-size: 0.7rem;
+    color: #556;
+    letter-spacing: 0.1em;
+}
+
+/* --- 画面3A: CREW紹介 --- */
+.crew-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 20px #f0f, 0 0 40px #a0f;
+    letter-spacing: 0.3em;
+    position: absolute;
+    top: 20px;
+}
+
+.crew-hint {
+    position: absolute;
+    top: 65px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #0ff;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px #0ff;
+    animation: tapPulse 2s ease-in-out infinite;
+    z-index: 200;
+    pointer-events: none;
+}
+
+.crew-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.crew-card {
+    position: absolute;
+    width: 140px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    touch-action: none;
+    transition: box-shadow 0.3s ease;
+    z-index: 100;
+}
+
+.crew-card:active {
+    cursor: grabbing;
+}
+
+.crew-card .card-role {
+    font-size: 0.55rem;
+    color: #0ff;
+    letter-spacing: 0.1em;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 8px #0ff;
+}
+
+.crew-card .card-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 4px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.crew-card[data-role="プログラマー"] {
+    border-color: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+}
+
+.crew-card[data-role="デザイナー"] {
+    border-color: rgba(255, 0, 255, 0.2);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.1);
+}
+
+.crew-card[data-role="デザイナー"] .card-role {
+    color: #f0f;
+    text-shadow: 0 0 8px #f0f;
+}
+
+.crew-card[data-role="プランナー"] {
+    border-color: rgba(255, 200, 0, 0.2);
+    box-shadow: 0 0 15px rgba(255, 200, 0, 0.1);
+}
+
+.crew-card[data-role="プランナー"] .card-role {
+    color: #fc0;
+    text-shadow: 0 0 8px #fc0;
+}
+
+.crew-card[data-role="ミュージック"] {
+    border-color: rgba(0, 255, 100, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 100, 0.1);
+}
+
+.crew-card[data-role="ミュージック"] .card-role {
+    color: #0f6;
+    text-shadow: 0 0 8px #0f6;
+}
+
+/* --- 戻るボタン --- */
+.back-btn {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 500;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #0ff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px #0ff;
+    transition: all 0.3s ease;
+}
+
+.back-btn:active {
+    transform: scale(0.9);
+    background: rgba(0, 255, 255, 0.15);
+}
+
+/* --- 画面3B: ゲーム紹介 --- */
+.game-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    gap: 20px;
+    max-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-top: 70px;
+    padding-bottom: 40px;
+}
+
+.game-logo-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow:
+        0 0 10px #0ff,
+        0 0 30px #0ff,
+        0 0 60px #0af;
+    letter-spacing: 0.05em;
+}
+
+.game-subtitle {
+    font-size: 1rem;
+    color: #c8b0ff;
+    letter-spacing: 0.3em;
+    text-shadow: 0 0 15px #c8b0ff88;
+    margin-top: -10px;
+}
+
+.game-desc {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #ccd;
+    max-width: 340px;
+    text-shadow: 0 0 8px rgba(200, 200, 255, 0.2);
+}
+
+.game-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    max-width: 340px;
+}
+
+.feature-chip {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    color: #aaf;
+    letter-spacing: 0.05em;
+}
+
+.download-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(135deg, #0ff, #a0f);
+    color: #000;
+    text-decoration: none;
+    padding: 16px 40px;
+    border-radius: 30px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow:
+        0 0 20px rgba(0, 255, 255, 0.3),
+        0 0 40px rgba(160, 0, 255, 0.2);
+}
+
+.download-btn:active {
+    transform: scale(0.95);
+}
+
+.download-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg,
+            transparent 40%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 60%);
+    animation: btnShine 3s ease-in-out infinite;
+}
+
+@keyframes btnShine {
+
+    0%,
+    100% {
+        transform: translateX(-100%) rotate(45deg);
+    }
+
+    50% {
+        transform: translateX(100%) rotate(45deg);
+    }
+}
+
+.dl-icon {
+    font-size: 1.5rem;
+}
+
+.dl-text {
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+}
+
+.dl-sub {
+    font-size: 0.6rem;
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+}
+
+.github-link {
+    color: #888;
+    font-size: 0.8rem;
+    text-decoration: none;
+    border-bottom: 1px solid #444;
+    padding-bottom: 2px;
+    transition: color 0.3s ease;
+}
+
+.github-link:active {
+    color: #0ff;
+}
+
+/* --- モーダル --- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.modal-content {
+    position: relative;
+    background: rgba(20, 10, 40, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 30px 24px;
+    width: 85%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    box-shadow:
+        0 0 30px rgba(0, 255, 255, 0.1),
+        0 0 60px rgba(160, 0, 255, 0.1);
+    animation: modalIn 0.4s ease-out;
+}
+
+@keyframes modalIn {
+    0% {
+        transform: scale(0.5) rotateX(20deg);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1) rotateX(0);
+        opacity: 1;
+    }
+}
+
+.modal-role {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    color: #0ff;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 10px #0ff;
+}
+
+.modal-name {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.modal-title-text {
+    font-size: 0.8rem;
+    color: #a8f;
+    letter-spacing: 0.1em;
+}
+
+.modal-quote {
+    font-size: 0.85rem;
+    color: #8af;
+    font-style: italic;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
+    min-height: 40px;
+}
+
+.modal-work {
+    font-size: 0.75rem;
+    color: #999;
+    line-height: 1.6;
+    min-height: 30px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.modal-close:active {
+    color: #fff;
+}

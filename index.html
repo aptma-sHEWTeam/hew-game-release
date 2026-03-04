@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>フリップエスケイプ — 弾いて遊べるゲーム紹介</title>
+    <meta name="description" content="フリップエスケイプ — スティックを引っ張って弾いてゴールを目指せ！sHEWTeamが贈る宇宙アクションゲーム。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- 宇宙背景Canvas -->
+    <canvas id="space-canvas"></canvas>
+
+    <!-- 画面1: ランディング -->
+    <section id="screen-landing" class="screen active">
+        <div class="landing-content">
+            <div class="title-glitch" data-text="FLIP ESCAPE">FLIP ESCAPE</div>
+            <div class="title-jp">フリップエスケイプ</div>
+            <div class="tagline">弾いて、飛んで、脱出せよ。</div>
+            <div class="tap-prompt" id="tap-prompt">
+                <span class="tap-icon">👆</span>
+                <span>TAP TO LAUNCH</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 画面2: 選択画面 -->
+    <section id="screen-select" class="screen">
+        <div class="select-title">NAVIGATE</div>
+        <div class="planets-container" id="planets-container">
+            <div class="planet" id="planet-crew" data-target="screen-crew">
+                <div class="planet-body planet-earth">
+                    <div class="planet-ring"></div>
+                </div>
+                <div class="planet-label">CREW</div>
+                <div class="planet-sublabel">製作者紹介</div>
+            </div>
+            <div class="planet" id="planet-game" data-target="screen-game">
+                <div class="planet-body planet-mars">
+                    <div class="planet-ring"></div>
+                </div>
+                <div class="planet-label">GAME</div>
+                <div class="planet-sublabel">紹介 & ダウンロード</div>
+            </div>
+        </div>
+        <div class="select-hint">惑星をタップして選択</div>
+    </section>
+
+    <!-- 画面3A: CREW紹介 -->
+    <section id="screen-crew" class="screen">
+        <button class="back-btn" data-target="screen-select">◀ BACK</button>
+        <div class="crew-title">CREW</div>
+        <div class="crew-hint">👇 気になるカードをタップ 👇</div>
+        <div class="crew-container" id="crew-container">
+            <!-- JSで生成 -->
+        </div>
+    </section>
+
+    <!-- 画面3B: ゲーム紹介 -->
+    <section id="screen-game" class="screen">
+        <button class="back-btn" data-target="screen-select">◀ BACK</button>
+        <div class="game-section">
+            <div class="game-logo-text" data-text="FLIP ESCAPE">FLIP ESCAPE</div>
+            <div class="game-subtitle">フリップエスケイプ</div>
+            <div class="game-desc">
+                スティックを引っ張って…弾く！<br>
+                何度も弾いてゴールを目指せ！<br>
+                宇宙を舞台にした爽快アクションゲーム。
+            </div>
+            <div class="game-features">
+                <div class="feature-chip">コントローラー対応</div>
+                <div class="feature-chip">宇宙ステージ</div>
+                <div class="feature-chip">爽快フリック操作</div>
+                <div class="feature-chip">ステージクリア型</div>
+            </div>
+            <a href="https://drive.google.com/file/d/1MWv7T7NArwSYyOAl8kTHW9jMYATHuxWK/view?usp=sharing" target="_blank"
+                rel="noopener" class="download-btn" id="download-btn">
+                <span class="dl-text">DOWNLOAD GAME</span>
+                <span class="dl-sub">Google Drive</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- メンバー詳細モーダル -->
+    <div id="member-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-role" id="modal-role"></div>
+            <div class="modal-name" id="modal-name"></div>
+            <div class="modal-title-text" id="modal-title-text"></div>
+            <div class="modal-quote" id="modal-quote"></div>
+            <div class="modal-work" id="modal-work"></div>
+            <button class="modal-close" id="modal-close">✕</button>
+        </div>
+    </div>
+
+    <!-- エフェクト用Canvas（前面） -->
+    <canvas id="fx-canvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
